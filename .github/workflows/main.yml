@@ -7,45 +7,45 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-    - name: Unzip source
-      run: |
-        if ls *.zip; then
-          unzip *.zip -d .
-        else
-          echo "No zip found, using existing files"
-        fi
+      - name: Unzip source
+        run: |
+          if ls *.zip; then
+            unzip *.zip -d .
+          else
+            echo "No zip found, using existing files"
+          fi
 
-    - name: Setup Android SDK
-      uses: android-actions/setup-android@v3
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
 
-    - name: Setup Android NDK
-      uses: nttld/setup-ndk@v1
-      with:
-        ndk-version: r26c
+      - name: Setup Android NDK
+        uses: nttld/setup-ndk@v1
+        with:
+          ndk-version: r26c
 
-    - name: Install dependencies
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y cmake build-essential
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cmake build-essential
 
-    - name: Configure CMake
-      run: |
-        mkdir build && cd build
-        cmake -DCMAKE_TOOLCHAIN_FILE=$ANDROID_HOME/ndk-bundle/build/cmake/android.toolchain.cmake \
-              -DANDROID_ABI=arm64-v8a \
-              -DANDROID_PLATFORM=android-21 \
-              ../MultiCraft-2.0.14
+      - name: Configure CMake
+        run: |
+          mkdir build && cd build
+          cmake -DCMAKE_TOOLCHAIN_FILE=$ANDROID_HOME/ndk-bundle/build/cmake/android.toolchain.cmake \
+                -DANDROID_ABI=arm64-v8a \
+                -DANDROID_PLATFORM=android-21 \
+                ../MultiCraft-2.0.14
 
-    - name: Build with CMake
-      run: |
-        cd build
-        make -j4
+      - name: Build with CMake
+        run: |
+          cd build
+          make -j4
 
-    - name: Upload APK
-      uses: actions/upload-artifact@v4
-      with:
-        name: multicraft-apk
-        path: build/*.apk
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: multicraft-apk
+          path: build/*.apk
